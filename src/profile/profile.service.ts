@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from 'src/user/schema/user.schema';
+import { User, UserDocument } from 'src/user/schema/user.schema';
 
 @Injectable()
 export class ProfileService {
   constructor(
     @InjectModel(User.name)
-    private userModel: Model<User>,
+    private userModel: Model<UserDocument>,
   ) {}
 
   //Get Profile
@@ -23,5 +23,43 @@ export class ProfileService {
     }
 
     return { username: user.username, bio: user.bio, image: user.image };
+  }
+
+  //Follow user
+  async followProfile(
+    username: string,
+    followUsername: string,
+  ): Promise<{ username: string; bio: string; image: string }> {
+    const profile = await this.userModel.findOneAndUpdate(
+      { username },
+      {
+        $addToSet: { followers: followUsername },
+      },
+      { new: true },
+    );
+    return {
+      username: profile.username,
+      bio: profile.bio,
+      image: profile.image,
+    };
+  }
+
+  //unfollow user
+  async unfollowUser(
+    username: string,
+    followUsername: string,
+  ): Promise<{ username: string; bio: string; image: string }> {
+    const profile = await this.userModel.findOneAndUpdate(
+      { username },
+      {
+        $pull: { followers: followUsername },
+      },
+      { new: true },
+    );
+    return {
+      username: profile.username,
+      bio: profile.bio,
+      image: profile.image,
+    };
   }
 }

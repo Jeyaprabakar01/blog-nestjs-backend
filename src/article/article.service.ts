@@ -169,4 +169,43 @@ export class ArticleService {
 
     return 'comment deleted successfully';
   }
+
+  //Favorite Article
+  async favouriteArticle(
+    slug: string,
+    user: UserDocument,
+  ): Promise<ArticleDocument> {
+    const article = await this.articleModel.findOne({ slug });
+
+    if (!article) {
+      throw new NotFoundException('Article not found');
+    }
+
+    if (!article.favorited.includes(user._id)) {
+      article.favorited.push(user._id);
+      article.favoritesCount++;
+      await article.save();
+    }
+    return article;
+  }
+
+  //unfavorite Article
+  async unfavoriteArticle(
+    slug: string,
+    user: UserDocument,
+  ): Promise<ArticleDocument> {
+    const article = await this.findBySlug(slug);
+
+    if (!article) {
+      throw new NotFoundException('Article not found');
+    }
+
+    const index = article.favorited.indexOf(user._id);
+    if (index >= 0) {
+      article.favorited.splice(index, 1);
+      article.favoritesCount--;
+      await article.save();
+    }
+    return article;
+  }
 }

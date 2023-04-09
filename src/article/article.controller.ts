@@ -97,4 +97,20 @@ export class ArticleController {
 
     return await this.articleService.deleteCommentBySlug(slug, id);
   }
+
+  @Post(':slug/favorite')
+  @UseGuards(AuthGuard())
+  async favoriteArticle(@Param('slug') slug: string, @Req() req) {
+    const id = req.user.id;
+
+    return this.articleService.favouriteArticle(slug, id);
+  }
+
+  @Delete(':slug/favorite')
+  @UseGuards(AuthGuard())
+  async UnfavoriteArticle(@Param('slug') slug: string, @Req() req) {
+    const id = req.user.id;
+
+    return this.articleService.unfavoriteArticle(slug, id);
+  }
 }

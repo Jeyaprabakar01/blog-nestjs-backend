@@ -21,7 +21,7 @@ export class UpdateArticleDTO {
   readonly tagList: string[];
 
   @IsEmpty()
-  readonly favorited: boolean;
+  readonly favorited: string[];
 
   @IsEmpty()
   readonly favoritesCount: number;

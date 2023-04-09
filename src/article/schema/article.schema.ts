@@ -25,8 +25,11 @@ export class Article {
   @Prop({ default: [] })
   tagList: string[];
 
-  @Prop({ default: false })
-  favorited: boolean;
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    default: [],
+  })
+  favorited: User[];
 
   @Prop({ default: 0 })
   favoritesCount: number;
