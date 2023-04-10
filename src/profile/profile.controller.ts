@@ -24,6 +24,7 @@ export class ProfileController {
   }
 
   @Post(':username/follow')
+  @UseGuards(AuthGuard())
   async followProfile(
     @Param('username') username: string,
     @Req() user: { username: string },
@@ -41,6 +42,7 @@ export class ProfileController {
   }
 
   @Delete(':username/follow')
+  @UseGuards(AuthGuard())
   async unfollowProfile(
     @Param('username') username: string,
     @Req() user: { username: string },
